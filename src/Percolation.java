@@ -4,10 +4,8 @@ public class Percolation {
     private int last;
     private WeightedQuickUnionUF model;
     private boolean[][] model2d;
-    private boolean percolated;
 
     public Percolation(int N) {
-        percolated = false;
         if (N <= 0) throw new IllegalArgumentException("Illegal argument exception");
         side = N;
         last = N * N + 1;
@@ -30,6 +28,9 @@ public class Percolation {
         if (i == 1) {
             model.union(index, 0);
         }
+        if (i == side) {
+            model.union(index, last);
+        }
         if (i > 1 && isOpen(i - 1, j)) {
             model.union(index, index - side);
         }
@@ -50,11 +51,6 @@ public class Percolation {
                 model.union(index + 1, index);
             }
         }
-        if (i == side) {
-            if (model.connected(0, index)) {
-               percolated = true;
-            }
-        }
         model2d[i - 1][j - 1] = true;
     }
 
@@ -72,6 +68,9 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return percolated;
+        if (model.connected(0, last)) {
+            return true;
+        }
+        return false;
     }
 }
